@@ -143,7 +143,6 @@ while True:
   time.sleep(measuring_interval)
   
   n_intermediate_measurements = max(math.floor(watering_interval/measuring_interval) - 1, 0)
-  print(str(n_intermediate_measurements))
   for i in range(n_intermediate_measurements):  
     
     for ind, isensor in enumerate(sensors):
