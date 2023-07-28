@@ -2,6 +2,7 @@ import os
 import machine
 from machine import Pin, ADC
 import time
+import math
 #import datetime
 
 
@@ -23,7 +24,10 @@ watering_time = [4,
                   ]
 
 # Time between waterings (s)
-watering_interval = 3600
+watering_interval = 10#3600
+
+# Time between measurements (fraction of watering_interval)
+measuring_interval = 2
 
 # Define input pins
 #button_interrupt = Pin(23, Pin.IN)
@@ -135,10 +139,20 @@ while True:
   print("Sensor values: " + (' '.join(str(x) for x in sensorVal)))
   print("Pump status: " + (' '.join(str(x) for x in isPumpOn)) + "\n")
   
-  time.sleep(watering_interval)
+  #time.sleep(watering_interval)
+  time.sleep(measuring_interval)
+  
+  n_intermediate_measurements = max(math.floor(watering_interval/measuring_interval) - 1, 0)
+  print(str(n_intermediate_measurements))
+  for i in range(n_intermediate_measurements):  
+    
+    for ind, isensor in enumerate(sensors):
+      sensorVal[ind] = isensor.read()
+      
+    print("Measured at:  " + str(time.localtime()))
+    print("Sensor values: " + (' '.join(str(x) for x in sensorVal)))
+    
+    time.sleep(measuring_interval)
+    
  
 print("Exited")
-
-
-
-
