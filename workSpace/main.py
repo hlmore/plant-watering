@@ -15,12 +15,14 @@ import math
 # 2400 = very dry shamrock
 # 3600 = fully dry
 watering_threshold = [1700,
-                       1650
+                       1650,
+                       1600
                        ]
 
 # Watering time (s)
-watering_time = [4,
-                  3
+watering_time = [1,
+                  1,
+                  1
                   ]
 
 # Time between waterings (s)
@@ -31,13 +33,15 @@ measuring_interval = 2
 
 # Define input pins
 #button_interrupt = Pin(23, Pin.IN)
-sensor_vp = ADC(Pin(36)) # yellow/green/blue
-sensor_vn = ADC(Pin(39)) # brown/red/orange
+sensor_ygb = ADC(Pin(34)) # yellow/green/blue
+sensor_bro = ADC(Pin(35)) # brown/red/orange
+sensor_kkk = ADC(Pin(32)) # black/black/black (outside)
 
 # Define output pins
 led = Pin(2, Pin.OUT)
-pump_12 = Pin(12, Pin.OUT)
-pump_13 = Pin(13, Pin.OUT)
+pump_ygb = Pin(12, Pin.OUT)
+pump_bro = Pin(13, Pin.OUT)
+pump_kkk = Pin(14, Pin.OUT)
 
 # Interrupt counters
 #n_current_interrupts = 0
@@ -47,20 +51,24 @@ pump_13 = Pin(13, Pin.OUT)
 ## INITIALIZE #############################
 
 # Set range of input voltage
-sensor_vp.atten(ADC.ATTN_11DB)
-sensor_vn.atten(ADC.ATTN_11DB)
+sensor_ygb.atten(ADC.ATTN_11DB)
+sensor_bro.atten(ADC.ATTN_11DB)
+sensor_kkk.atten(ADC.ATTN_11DB)
 
 # Initialize output pin values
-pump_12.value(0)
-pump_13.value(0)
+pump_ygb.value(0)
+pump_bro.value(0)
+pump_kkk.value(0)
 
 # Create sensor list
-sensors = [sensor_vp,
-            sensor_vn
+sensors = [sensor_ygb,
+            sensor_bro,
+            sensor_kkk
             ]
 # Define which pump each sensor controls
-pumps = [pump_12,
-          pump_13
+pumps = [pump_ygb,
+          pump_bro,
+          pump_kkk
           ]
 
 
@@ -69,10 +77,12 @@ pumps = [pump_12,
 # Print pin values and time
 print("Started at:  " + str(time.localtime()))
 #print("button_interrupt = " + str(button_interrupt.value()))
-print("sensor_vp = " + str(sensor_vp.read()))
-print("sensor_vn = " + str(sensor_vn.read()))
-print("pump_12 = " + str(pump_12.value()))
-print("pump_13 = " + str(pump_13.value()))
+print("sensor_ygb = " + str(sensor_ygb.read()))
+print("sensor_bro = " + str(sensor_bro.read()))
+print("sensor_kkk = " + str(sensor_kkk.read()))
+print("pump_ygb = " + str(pump_ygb.value()))
+print("pump_bro = " + str(pump_bro.value()))
+print("pump_kkk = " + str(pump_kkk.value()))
 
 
 ## INTERRUPTS ##############################
@@ -132,8 +142,8 @@ while True:
   # https://github.com/artem-smotrakov/esp32-weather-google-sheets
   #print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
   
-  #print("sensor_vp = " + str(sensor_vp.read()))
-  #print("sensor_vn = " + str(sensor_vn.read()))
+  #print("sensor_ygb = " + str(sensor_ygb.read()))
+  #print("sensor_bro = " + str(sensor_bro.read()))
   
   print("Measured at:  " + str(time.localtime()))
   print("Sensor values: " + (' '.join(str(x) for x in sensorVal)))
@@ -155,3 +165,4 @@ while True:
     
  
 print("Exited")
+
