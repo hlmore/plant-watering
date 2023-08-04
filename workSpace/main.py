@@ -94,6 +94,25 @@ tft.rotation(0)
 screen_size = str(tft.size())
 
 
+## DEFINE FUNCTIONS #######################
+def print_status_to_lcd():
+  tft.fill(TFT.BLACK)
+  tft.text(aPos=(0, 0), 
+          aString="Measured @ " + str(time.localtime())
+          + " ygb=" + str(sensor_ygb.read())
+          + " bro=" + str(sensor_bro.read())
+          + " kkk=" + str(sensor_kkk.read())
+          + " pumps=" + str(str(pump_ygb.value()))
+          + " " + str(pump_bro.value())
+          + " " + str(pump_kkk.value()),
+          aColor=TFT.WHITE, 
+          aFont=sysfont, 
+          aSize=1,
+          nowrap=False
+          )
+  time.sleep_ms(1)
+
+
 ## CHECK VALUES ###########################
 
 # Print pin values and time
@@ -107,21 +126,7 @@ print("pump_bro = " + str(pump_bro.value()))
 print("pump_kkk = " + str(pump_kkk.value()))
 
 # Print pin values to LCD
-tft.fill(TFT.BLACK)
-tft.text(aPos=(0, 0), 
-        aString="Measured @ " + str(time.localtime())
-        + " ygb=" + str(sensor_ygb.read())
-        + " bro=" + str(sensor_bro.read())
-        + " kkk=" + str(sensor_kkk.read())
-        + " pumps=" + str(str(pump_ygb.value()))
-        + " " + str(pump_bro.value())
-        + " " + str(pump_kkk.value()),
-        aColor=TFT.WHITE, 
-        aFont=sysfont, 
-        aSize=1,
-        nowrap=False
-        )
-time.sleep_ms(1)
+print_status_to_lcd()
 
 
 ## INTERRUPTS ##############################
@@ -189,21 +194,7 @@ while True:
   print("Pump status: " + (' '.join(str(x) for x in isPumpOn)) + "\n")
   
   # Print pin values to LCD
-  tft.fill(TFT.BLACK)
-  tft.text(aPos=(0, 0), 
-          aString="Measured @ " + str(time.localtime())
-          + " ygb=" + str(sensor_ygb.read())
-          + " bro=" + str(sensor_bro.read())
-          + " kkk=" + str(sensor_kkk.read())
-          + " pumps=" + str(str(pump_ygb.value()))
-          + " " + str(pump_bro.value())
-          + " " + str(pump_kkk.value()),
-          aColor=TFT.WHITE, 
-          aFont=sysfont, 
-          aSize=1,
-          nowrap=False
-          )
-  time.sleep_ms(1)
+  print_status_to_lcd()
   
   #time.sleep(watering_interval)
   time.sleep(measuring_interval)
@@ -218,21 +209,7 @@ while True:
     print("Sensor values: " + (' '.join(str(x) for x in sensorVal)))
     
     # Print pin values to LCD
-    tft.fill(TFT.BLACK)
-    tft.text(aPos=(0, 0), 
-            aString="Measured @ " + str(time.localtime())
-            + " ygb=" + str(sensor_ygb.read())
-            + " bro=" + str(sensor_bro.read())
-            + " kkk=" + str(sensor_kkk.read())
-            + " pumps=" + str(str(pump_ygb.value()))
-            + " " + str(pump_bro.value())
-            + " " + str(pump_kkk.value()),
-            aColor=TFT.WHITE, 
-            aFont=sysfont, 
-            aSize=1,
-            nowrap=False
-            )
-    time.sleep_ms(1)
+    print_status_to_lcd()
     
     time.sleep(measuring_interval)
     
