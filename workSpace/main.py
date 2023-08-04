@@ -28,10 +28,10 @@ watering_time = [1,
                   ]
 
 # Time between waterings (s)
-watering_interval = 10#3600
+watering_interval = 60#3600
 
-# Time between measurements (fraction of watering_interval)
-measuring_interval = 2
+# Time between measurements (s)
+measuring_interval = 30
 
 # Define input pins
 #button_interrupt = Pin(23, Pin.IN)
