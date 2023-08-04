@@ -91,20 +91,10 @@ tft=TFT(spi,
 tft.initr()
 tft.rgb(False)
 tft.rotation(0)
+screen_size = str(tft.size())
 
 
 ## CHECK VALUES ###########################
-
-tft.fill(TFT.BLACK)
-screen_size = str(tft.size())
-tft.text(aPos=(0, 0), 
-        aString="XXXX" + screen_size + "TEST TEXT ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 
-        aColor=TFT.WHITE, 
-        aFont=sysfont, 
-        aSize=1,
-        nowrap=False
-        )
-time.sleep_ms(1000)
 
 # Print pin values and time
 print("Started at:  " + str(time.localtime()))
@@ -115,6 +105,23 @@ print("sensor_kkk = " + str(sensor_kkk.read()))
 print("pump_ygb = " + str(pump_ygb.value()))
 print("pump_bro = " + str(pump_bro.value()))
 print("pump_kkk = " + str(pump_kkk.value()))
+
+# Print pin values to LCD
+tft.fill(TFT.BLACK)
+tft.text(aPos=(0, 0), 
+        aString="Measured @ " + str(time.localtime())
+        + " ygb=" + str(sensor_ygb.read())
+        + " bro=" + str(sensor_bro.read())
+        + " kkk=" + str(sensor_kkk.read())
+        + " pumps=" + str(str(pump_ygb.value()))
+        + " " + str(pump_bro.value())
+        + " " + str(pump_kkk.value()),
+        aColor=TFT.WHITE, 
+        aFont=sysfont, 
+        aSize=1,
+        nowrap=False
+        )
+time.sleep_ms(1000)
 
 
 ## INTERRUPTS ##############################
