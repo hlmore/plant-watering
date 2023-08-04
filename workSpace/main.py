@@ -1,9 +1,11 @@
 import os
 import machine
-from machine import Pin, ADC
+from machine import Pin, ADC, SPI
 import time
 import math
 #import datetime
+from ST7735 import TFT
+from sysfont import sysfont
 
 
 ## INPUTS ################################
@@ -71,8 +73,38 @@ pumps = [pump_ygb,
           pump_kkk
           ]
 
+# LCD stuff
+# VCC and GND on LCD go to 3V3 and GND on esp32
+spi = SPI(2, 
+          baudrate=20000000, 
+          polarity=0, 
+          phase=0, 
+          sck=Pin(18), # CLK
+          mosi=Pin(23), # DIN
+          miso=Pin(4) # BL
+          )
+tft=TFT(spi, 
+        15, # DC
+        5, # RST
+        2 # CS
+        )
+tft.initr()
+tft.rgb(False)
+tft.rotation(0)
+
 
 ## CHECK VALUES ###########################
+
+tft.fill(TFT.BLACK)
+screen_size = str(tft.size())
+tft.text(aPos=(0, 0), 
+        aString="XXXX" + screen_size + "TEST TEXT ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 
+        aColor=TFT.WHITE, 
+        aFont=sysfont, 
+        aSize=1,
+        nowrap=False
+        )
+time.sleep_ms(1000)
 
 # Print pin values and time
 print("Started at:  " + str(time.localtime()))
@@ -165,4 +197,5 @@ while True:
     
  
 print("Exited")
+
 
