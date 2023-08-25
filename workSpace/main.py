@@ -129,6 +129,12 @@ def read_sensor(sensor_object):
   print(str(sensor_value))
   sensor_mean = round( sum(sensor_value) / len(sensor_value) )
   return sensor_mean
+  
+def get_pump_values(pumps):
+  pump_values = []
+  for i in range(len(pumps)):
+    pump_values.append(pumps[i].value())
+  return pump_values
 
 
 ## CHECK VALUES ###########################
@@ -196,8 +202,8 @@ while True:
   #print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
   
   # Print status
-  print_status_to_terminal(sensorVal, pumps)
-  print_status_to_lcd(sensorVal, pumps)
+  print_status_to_terminal(sensorVal, get_pump_values(pumps))
+  print_status_to_lcd(sensorVal, get_pump_values(pumps))
   
   #time.sleep(watering_interval)
   time.sleep(measuring_interval)
