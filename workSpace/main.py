@@ -178,9 +178,10 @@ while True:
   sensorVal = [0]*len(sensors)
   
   # Check value of sensor and water plant if it is too dry
+  # Don't water if sensor is maxed out, because it's probably an error
   for ind, isensor in enumerate(sensors):
     sensorVal[ind] = read_sensor(isensor)
-    if isensor.read() > watering_threshold[ind]:
+    if (sensorVal[ind] > watering_threshold[ind]) and (sensorVal[ind] < 4095):
       # Keep track of sensor and pump information
       isPumpOn[ind] = 1      
       # Turn on water for prescribed time
