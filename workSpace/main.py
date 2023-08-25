@@ -11,11 +11,8 @@ from sysfont import sysfont
 ## INPUTS ################################
 
 # Watering thresholds
-# 1280 = overflow sensor is wet
-# 1360 = wet shamrock
-# 1420 = tap water
-# 2400 = very dry shamrock
-# 3600 = fully dry
+# LOW == WET
+# HIGH == DRY
 watering_threshold = [2850, # ygb
                        2400, # bro
                        2200 # kkk
@@ -32,6 +29,8 @@ watering_interval = 2*3600
 
 # Time between measurements (s)
 measuring_interval = 0.25*3600
+# Number of measurements to average
+n_measurements = 5
 
 # Define input pins
 #button_interrupt = Pin(23, Pin.IN)
@@ -96,21 +95,23 @@ screen_size = str(tft.size())
 
 ## DEFINE FUNCTIONS #######################
 
-def get_status_as_string():
+def get_status_as_string(sensor_values, pump_values):
   t = time.localtime()
-  out_string = ("Measured @" + " day=" + str(t[2]) + " time=" + str(t[3]) + ":" + str(t[4])
-  + "\nygb=" + str(sensor_ygb.read())
-  + "\nbro=" + str(sensor_bro.read())
-  + "\nkkk=" + str(sensor_kkk.read())
-  + "\npumps=" + str(str(pump_ygb.value()))
-  + " " + str(pump_bro.value())
-  + " " + str(pump_kkk.value()))
+  out_string = (
+  "Measured @" + " day=" + str(t[2]) + " time=" + str(t[3]) + ":" + str(t[4])
+  + "\nygb=" + str(sensor_values[0])
+  + "\nbro=" + str(sensor_values[1])
+  + "\nkkk=" + str(sensor_values[2])
+  + "\npumps=" + str(pump_values[0])
+  + " " + str(pump_values[1])
+  + " " + str(pump_values[2])
+  )
   return out_string
   
-def print_status_to_lcd():
+def print_status_to_lcd(sensor_values, pump_values=["NA", "NA", "NA"]):
   tft.fill(TFT.BLACK)
   tft.text(aPos=(0, 0), 
-          aString=get_status_as_string(),
+          aString=get_status_as_string(sensor_values, pump_values),
           aColor=TFT.WHITE, 
           aFont=sysfont, 
           aSize=1,
@@ -118,15 +119,23 @@ def print_status_to_lcd():
           )
   time.sleep_ms(1)
   
-def print_status_to_terminal():
-  print(get_status_as_string())
+def print_status_to_terminal(sensor_values, pump_values=["NA", "NA", "NA"]):
+  print(get_status_as_string(sensor_values, pump_values))
+  
+def read_sensor(sensor_object):
+  sensor_value = []
+  for i in range(n_measurements):
+    sensor_value.append(sensor_object.read())
+  print(str(sensor_value))
+  sensor_mean = round( sum(sensor_value) / len(sensor_value) )
+  return sensor_mean
 
 
 ## CHECK VALUES ###########################
 
 # Print status
-print_status_to_terminal()
-print_status_to_lcd()
+#print_status_to_terminal()
+#print_status_to_lcd()
 
 
 ## INTERRUPTS ##############################
@@ -170,7 +179,7 @@ while True:
   
   # Check value of sensor and water plant if it is too dry
   for ind, isensor in enumerate(sensors):
-    sensorVal[ind] = isensor.read()
+    sensorVal[ind] = read_sensor(isensor)
     if isensor.read() > watering_threshold[ind]:
       # Keep track of sensor and pump information
       isPumpOn[ind] = 1      
@@ -186,8 +195,8 @@ while True:
   #print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
   
   # Print status
-  print_status_to_terminal()
-  print_status_to_lcd()
+  print_status_to_terminal(sensorVal, pumps)
+  print_status_to_lcd(sensorVal, pumps)
   
   #time.sleep(watering_interval)
   time.sleep(measuring_interval)
@@ -196,11 +205,11 @@ while True:
   for i in range(n_intermediate_measurements):  
     
     for ind, isensor in enumerate(sensors):
-      sensorVal[ind] = isensor.read()
+      sensorVal[ind] = read_sensor(isensor)
       
     # Print status
-    print_status_to_terminal()
-    print_status_to_lcd()
+    print_status_to_terminal(sensorVal)
+    print_status_to_lcd(sensorVal)
     
     time.sleep(measuring_interval)
     
