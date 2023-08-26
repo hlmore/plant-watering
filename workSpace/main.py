@@ -13,15 +13,15 @@ from sysfont import sysfont
 # Watering thresholds
 # LOW == WET
 # HIGH == DRY
-watering_threshold = [2850, # ygb
-                       2400, # bro
-                       2200 # kkk
+watering_threshold = [2100, # ygb
+                       2350,#2100, # bro
+                       2200, # kkk
                        ]
 
 # Watering time (s)
 watering_time = [5, # ygb
-                  10, # bro
-                  15 # kkk
+                  15, # bro
+                  0#15 # kkk
                   ]
 
 # Time between waterings (s)
