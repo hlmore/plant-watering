@@ -13,8 +13,8 @@ from sysfont import sysfont
 # Watering thresholds
 # LOW == WET
 # HIGH == DRY
-watering_threshold = [2100, # ygb
-                       2350,#2100, # bro
+watering_threshold = [2000, # ygb
+                       2200, # bro
                        2200, # kkk
                        ]
 
@@ -222,6 +222,7 @@ while True:
     
  
 print("Exited")
+
 
 
 
